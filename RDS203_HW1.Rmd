@@ -1,0 +1,526 @@
+---
+title: "RDS203_HW1"
+output: html_document
+date: "2026-04-02"
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(forcats)
+```
+
+## 1
+
+```{r}
+# Data
+data1_input <- read.csv("output_data/Q1_input.csv", header = TRUE)
+data1_output <- read.csv("output_data/Q1_output.csv", header = TRUE)
+
+head(data1_input)
+head(data1_output)
+
+# Merge datasets
+data1 <- data1_input|>
+  left_join(data1_output, by = "AgeGroup")
+
+# Proportion of baseline and averted cases
+data1_propCases <- data1|>
+  mutate(CRC_base_pct = (CRC_base / CohortSize),
+         CRC_averted_pct = (CRC_averted / CohortSize),
+         
+         CVA_base_pct = (CVA_base/ CohortSize),
+         CVA_averted_pct = (CVA_averted / CohortSize) 
+         )|>
+  pivot_longer(cols = c(CRC_base_pct, CRC_averted_pct, CVA_base_pct, CVA_averted_pct),
+               names_to = "Type",
+               values_to = "Incidence")|>
+  mutate(Disease = ifelse(grepl("CRC", Type), "CRC", "CVA"),
+         Measure = ifelse(grepl("base", Type), "Baseline", "Averted"))|>
+  select(AgeGroup, Disease, Measure, Incidence)
+head(data1_propCases)
+
+# Proportion of averted cases
+data1_propAverted <- data1|>
+  mutate(CRC_pct_averted = CRC_averted / CRC_base,
+         CVA_pct_averted = CVA_averted / CVA_base)|>
+  pivot_longer(cols = c(CRC_pct_averted, CVA_pct_averted),
+               names_to = "Type",
+               values_to = "Averted_prop")|>
+  mutate(Disease = ifelse(grepl("CRC", Type), "CRC", "CVA"))|>
+  select(AgeGroup, Disease, Averted_prop)
+head(data1_propAverted)
+```
+
+```{r}
+# Plot: Incidence
+ggplot(data1_propCases, aes(x = AgeGroup, y = Incidence, fill = Measure))+
+  geom_bar(stat = "identity", position = "dodge")+
+  facet_wrap(~Disease, scales = "free_y")+
+  scale_y_continuous(labels = scales::label_number(scale = 100))+
+  scale_fill_manual(values = c("Baseline" = "grey70",
+                               "Averted" = "#FF6347"))+
+  labs(x = "Age Group",
+       y = "Incidence (%)")+
+  theme_minimal()+
+  theme(legend.position = "top",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Plot: Averted proportion
+ggplot(data1_propAverted, aes(x = AgeGroup, y = Averted_prop, fill = Disease))+
+  geom_bar(stat = "identity", position = "dodge")+
+  scale_y_continuous(labels = scales::label_number(scale = 100))+
+  scale_fill_manual(values = c("CRC" = "#CDAA7D",
+                               "CVA" = "#7AC5CD"))+
+  labs(x = "Age Group",
+       y = "Averted Proportion (%)",
+       fill = "Disease")+
+  theme_minimal()+
+  theme(legend.position = "top",
+        axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+
+## 2c.
+
+```{r}
+# Load data
+data2c <- read.csv("output_data/Q2c.csv", header = TRUE)
+head(data2c)
+
+# Convert to long format
+data2c_long <- data2c|>
+  pivot_longer(cols = c(S, I, R),
+               names_to = "Compartments",
+               values_to = "Value")
+head(data2c_long)
+
+# Plot
+ggplot(data2c_long, aes(x = t, y = Value, colour = Compartments))+
+  geom_line(size = 1)+
+  scale_colour_manual(values = c("S" = "#0000EE",
+                                 "I" = "#EE3B3B",
+                                 "R" = "#00EE00"),
+                      labels = c("S" = "Susceptible",
+                                 "I" = "Infectious",
+                                 "R" = "Recovered/Removed"))+
+  labs(
+    x = "Time (t)",
+    y = "Cases",
+    colour = "",
+  )+
+  theme_minimal()
+```
+
+## 5b
+
+$$
+L =
+\begin{pmatrix}
+2.2360 & 0 & 0 \\
+1.3416 & 0.4472 & 0 \\
+0.4472 & 0.8944 & 1.0000
+\end{pmatrix}
+$$
+
+## 5c
+
+$$
+L =
+\begin{pmatrix}
+1.3990 & 0      & 0      & 0      & 0 \\
+-0.2669 & 0.3247 & 0      & 0      & 0 \\
+0.0035 & 0.0003 & 0.0104 & 0      & 0 \\
+0.0429 & -0.0011 & 0.0214 & 0.0630 & 0 \\
+-0.0244 & -0.0047 & -0.0110 & -0.0187 & 0.0020
+\end{pmatrix}
+$$
+
+
+## 6b
+
+```{r}
+# Read data
+data6b <- read.csv("output_data/Q6b.csv", header = TRUE) # simulated (predicted)
+head(data6b)
+
+# Plot
+ggplot(data6b, aes(x = t_day)) +
+  geom_point(aes(y = case_obs, colour = "Observed"), size = 2)+
+  geom_line(aes(y = case_pred, colour = "Predicted"), size = 1)+
+  scale_colour_manual(values = c("Observed" = "lightcoral", 
+                                "Predicted" = "steelblue1"))+
+  labs(
+    title = "Initial Predicted Cases vs Observed Cases",
+    x = "Time (days)",
+    y = "Cases",
+    color = ""
+  )+
+  theme_minimal()+
+  theme(
+    legend.position = "top",
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+## 6e.
+
+```{r}
+data6e <- read.csv("output_data/Q6e.csv", header = TRUE)
+head(data6e)
+
+# Plot
+ggplot(data6e, aes(x = t_day))+
+  geom_point(aes(y = case_obs, colour = "Observed"), size = 2)+
+  geom_line(aes(y = case_pred, colour = "Predicted"), size = 1)+
+  scale_colour_manual(values = c("Observed" = "lightcoral",
+                                 "Predicted" = "steelblue1"))+
+  labs(
+    title = "Final Predicted Cases vs Observed Cases",
+    x = "Time (days)",
+    y = "Cases",
+    colour = ""
+  )+
+  theme_minimal()+
+  theme(
+    legend.position = "top",
+    plot.title = element_text(hjust = 0.5)
+  )
+```
+
+```{r}
+ data6_combined <- data6b|>
+  rename(case_initial = case_pred)|>
+  left_join(data6e|>
+              select(t_day, case_pred)|>
+              rename(case_final = case_pred),
+            by = "t_day")
+head(data6_combined)
+
+# Plot
+ggplot(data6_combined, aes(x = t_day))+
+  geom_line(aes(y = case_initial, colour = "Without gradient descent"), size = 1)+
+  geom_line(aes(y = case_final, colour = "With gradient descent"), size = 1)+
+  scale_colour_manual(values = c("Without gradient descent" = "steelblue1",
+                                 "With gradient descent" = "lightcoral"))+
+  labs(
+    x = "Time (days)",
+    y = "Cases",
+    colour = ""
+  )+
+  theme_minimal()+
+  theme(
+    legend.position = "top"
+  )
+```
+
+## 7.
+
+```{r}
+# Data
+data7 <- read.csv("output_data/Q7a.csv", header = TRUE)
+head(data7)
+
+# Check range
+range <- max(data7$y_true) - min(data7$y_true)
+cat("Predicted case range:", range, "\n")
+
+# Compute RMSE and relative error
+mse <- 11127.234330729083
+rmse <- sqrt(mse)
+relative_error = rmse/range
+cat("Relative error", relative_error)
+
+# Plot
+ggplot(data7, aes(x = x))+
+  geom_line(aes(y = y_pred, colour = "Predicted"), size = 1)+
+  geom_point(aes(y = y_true, colour = "Observed"), size = 1)+
+  labs(
+    x = "x",
+    y = "y",
+    colour = ""
+  )+
+  annotate(
+    "text",
+    x = max(data7$x)*0.6,
+    y = 2500,
+    label = paste("MSE = ", round(mse, 2), "\nRMSE = ", round(rmse, 2)),
+    size = 4
+  )+
+  theme_minimal()+
+  theme(legend.position = "top")
+```
+
+## 8
+
+```{r}
+# Data
+data8a <- read.csv("output_data/Q8.csv")
+head(data8a)
+
+# Plot
+ggplot(data8a, aes(x = x, y = y)) +
+  geom_path(colour = "steelblue1") +
+  geom_point(size = 2) +
+  annotate("point", x = data8a$x[1], y = data8a$y[1],
+           colour = "red", size = 3)+
+  geom_text(aes(label = City), vjust = -0.5, size = 3)+
+  theme_minimal()
+```
+
+## 9a
+
+```{r}
+# Data
+data9a <- read.csv("output_data/Q9a.csv", header = TRUE)
+table(data9a$Country)
+
+data9a_sampled <- data9a|>
+  count(Country)|>
+  mutate(prop_simulated = n/sum(n))|>
+  select(-n)
+head(data9a_sampled)
+
+# Empirical data
+data_emp <- data.frame(
+  Country = c("Nigeria","Ethiopia","Egypt","DRC","Tanzania", "South Africa","Kenya","Sudan","Uganda","Algeria"),
+  Count = c(228,129,115,106,67,63,55,50,49,46)
+)
+data_emp$prop_org <- data_emp$Count/sum(data_emp$Count) # compute probability
+head(data_emp)
+
+# Merge datasets
+data9a_comb <- data9a_sampled|>
+  left_join(data_emp|>
+              dplyr::select(Country, prop_org),
+            by = "Country")|>
+  pivot_longer(cols = c(prop_simulated, prop_org),
+               names_to = "Type",
+               values_to = "Value")
+head(data9a_comb)
+
+# Plot
+ggplot(data9a_comb, aes(x = reorder(Country, Value), y = Value, fill = Type))+
+  geom_bar(stat = "identity", position = "dodge")+
+  scale_fill_manual(values = c("prop_simulated" = "#87CEFF",
+                               "prop_org" = "grey70"),
+                    labels = c("Sampled", "Original"))+
+  labs(x = "Country",
+       y = "Proportion",
+       fill = "")+
+  theme_minimal()+
+  theme(legend.position = "top")
+```
+
+## 9b
+
+```{r}
+# Data
+data9b <- read.csv("output_data/Q9b.csv", header = TRUE)
+head(data9b)
+
+# Plot
+
+# binomial mean = (number or trials)*(probability of success)
+mu <- 1e6*0.01
+# binomial variance = np(1-p)
+sigma <- sqrt(1e6 * 0.01 * (1 - 0.01)) 
+
+ggplot(data9b, aes(x = x))+
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 30,
+                 fill = "lightgrey",
+                 colour = "black")+
+  geom_density(aes(colour = "Estimated density"),
+               linewidth = 1,
+               key_glyph = "path")+
+  stat_function(aes(colour = "Normal approximation"),
+                fun = dnorm,
+                args = list(mean = mu, sd = sigma),
+                linewidth = 1)+
+  scale_colour_manual(values = c("Estimated density" = "blue",
+                                 "Normal approximation" = "red"))+
+  labs(x = "x",
+       y = "Density",
+       colour = "")+
+  theme_minimal()+
+  theme(legend.position = "top")
+```
+
+```{r}
+# Data
+data9b_gamma <- read.csv("output_data/Q9b_gamma.csv", header = TRUE)
+head(data9b_gamma)
+
+# Plot
+
+# binomial mean = (number or trials)*(probability of success)
+mu <- 1e6*0.01
+# binomial variance = np(1-p)
+sigma <- sqrt(1e6 * 0.01 * (1 - 0.01)) 
+
+ggplot(data9b_gamma, aes(x = x))+
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 30,
+                 fill = "lightgrey",
+                 colour = "black")+
+  geom_density(aes(colour = "Estimated density"),
+               linewidth = 1,
+               key_glyph = "path")+
+  stat_function(aes(colour = "Normal approximation"),
+                fun = dnorm,
+                args = list(mean = mu, sd = sigma),
+                linewidth = 1)+
+  scale_colour_manual(values = c("Estimated density" = "blue",
+                                 "Normal approximation" = "red"))+
+  labs(x = "x",
+       y = "Density",
+       colour = "")+
+  theme_minimal()+
+  theme(legend.position = "top")
+```
+
+## 9c
+
+```{r}
+# Data
+data9c <- read.csv("output_data/Q9c.csv", header = TRUE)
+head(data9c)
+
+# Plot
+ggplot(data9c, aes(x = x))+
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 30,
+                 fill = "lightgrey",
+                 colour = "black")+
+  geom_density(aes(colour = "Estimated density"),
+               linewidth = 1,
+               key_glyph = "path")+
+  stat_function(aes(colour = "Theoretical Beta density"),
+                fun = dbeta,
+                args = list(shape1 = 9, shape2 = 3),
+                linewidth = 1)+
+  scale_colour_manual(values = c("Estimated density" = "blue",
+                                 "Theoretical Beta density" = "red"))+
+  labs(x = "x",
+       y = "Density",
+       colour = "")+
+  theme_minimal()+
+  theme(legend.position = "top")
+```
+
+## 9d
+
+```{r}
+# Data
+data9d <- read.csv("output_data/Q9d.csv", header = TRUE)
+head(data9d)
+
+# Plot
+z <- integrate(function(x) 5*cos(x^2) - 2*x + 25, lower = -10, upper = 10)$value
+
+ggplot(data9d, aes(x = x))+
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 30,
+                 fill = "lightgrey",
+                 colour = "black")+
+  geom_density(aes(colour = "Estimated density"),
+               linewidth = 1, fill = NA,
+               key_glyph = "path")+
+  stat_function(aes(colour = "Normalised target density"),
+                fun = function(x) (5*cos(x^2) - 2*x + 25)/z,
+                linewidth = 1)+
+  scale_colour_manual(values = c("Estimated density" = "blue",
+                                 "Normalised target density" = "red"))+
+  labs(x = "x",
+       y = "Density",
+       colour = "")+
+  theme_minimal()+
+  theme(legend.position = "top")
+```
+
+## 9e
+
+```{r}
+# Data
+data9e <- read.csv("output_data/Q9e.csv")
+head(data9e)
+
+# Plot A
+ggplot(data9e, aes(x = A))+
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 30,
+                 fill = "lightgrey",
+                 colour = "black")+
+  geom_density(aes(colour = "Estimated density"),
+               key_glyph = "path")+
+  scale_colour_manual(values = c("Estimated density" = "blue"))+
+  labs(x = "A", y = "Density", colour = "")+
+  theme_minimal()+
+  theme(legend.position = "top")
+
+# Plot B
+ggplot(data9e, aes(x = B))+
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 30,
+                 fill = "lightgrey",
+                 colour = "black")+
+  geom_density(aes(colour = "Estimated density"),
+               key_glyph = "path")+
+  scale_colour_manual(values = c("Estimated density" = "blue"))+
+  labs(x = "B", y = "Density", colour = "")+
+  theme_minimal()+
+  theme(legend.position = "top")
+
+# Scatterplot
+rho_val <- round(cor(data9e$A, data9e$B), 3)
+
+ggplot(data9e, aes(x = A, y = B))+
+  geom_point(alpha = 0.5, colour = "steelblue1")+
+  geom_smooth(method = "lm",
+              se = FALSE,
+              aes(colour = "Regression line"),
+              linewidth = 1)+
+  scale_colour_manual(values = c("Regression line" = "red"))+
+  labs(x = "A", y = "B", colour = "")+
+  annotate("text",
+           x = quantile(data9e$A, 0.05),,
+           y = quantile(data9e$B, 0.95),
+           label = as.expression(bquote(rho == .(rho_val))),
+           hjust = 0,
+           vjust = 1)+
+  theme_minimal()+
+  theme(legend.position = "top")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
