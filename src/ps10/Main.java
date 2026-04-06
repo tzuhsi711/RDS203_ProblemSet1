@@ -11,7 +11,7 @@ public class Main {
 			// 0. Load data
 			// ==================
 			ReadCSV data = new ReadCSV();
-			data.load("src/ps10/data_NHANES_bp.csv");
+			data.load("input_data/data_NHANES_bp.csv");
 			
 			double[] bp = data.getBP();
 			double[] wt = data.getWT();

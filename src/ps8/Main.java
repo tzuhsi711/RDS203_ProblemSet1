@@ -26,7 +26,7 @@ public class Main {
         System.out.println();
         
         // Save route info
-        PrintWriter writer = new PrintWriter("Q8.csv");
+        PrintWriter writer = new PrintWriter("output_data/Q8.csv");
         writer.println("x,y,City");
         
         for (int i : best.order) {

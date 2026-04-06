@@ -5,6 +5,10 @@ date: "2026-04-02"
 ---
 
 ```{r}
+install.packages("gt")
+install.packages("ggrepel")
+library(gt)
+library(ggrepel)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
@@ -112,6 +116,38 @@ ggplot(data2c_long, aes(x = t, y = Value, colour = Compartments))+
   )+
   theme_minimal()
 ```
+
+## 3
+
+```{r}
+data3_org <- data.frame(
+  x = c(0, 5, 7, 13, 19, 25, 32),
+  y = c(0, 3, 4, 9, 14, 11, 5)
+)
+head(data3_org)
+
+data3_spline <- read.csv("./output_data/Q3_spline.csv", header = TRUE)
+head(data3_spline)
+
+data3_coefs <- read.csv("./output_data/Q3_coefs.csv", header = TRUE)
+head(data3_coefs)
+```
+
+```{r}
+ggplot()+
+  geom_line(data = data3_spline, aes(x = x, y = y), colour = "steelblue1")+
+  geom_point(data = data3_org, aes(x = x, y = y), colour = "lightcoral", size = 3)+
+  geom_text_repel(data = data3_org,
+                  aes(x = x, y = y, label = paste0("(", x, ",", y, ")")),
+                  size = 3.5)+
+  theme_minimal()
+```
+
+```{r}
+data3_coefs |>
+  mutate(across(where(is.numeric), ~ round(., digits = 3)))
+```
+
 
 ## 5b
 

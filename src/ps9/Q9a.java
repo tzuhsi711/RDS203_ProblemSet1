@@ -57,7 +57,7 @@ public class Q9a {
         // =====================
         try (FileWriter writer = new FileWriter("output_data/Q9a.csv")) {
         	
-        	writer.write("country\n"); // header
+        	writer.write("Country\n"); // header
         	
         	for(String c : samples) {
         		writer.write(c + "\n");
