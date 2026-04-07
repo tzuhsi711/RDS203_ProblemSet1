@@ -13,17 +13,20 @@ public class Q6b {
     		// header
     		file.write("t_day,case_pred,case_obs\n");
     		
-    		int n = Math.min(cases.length, targets.length);
-    		
-    		for (int i = 0; i < n; i++) {
-    			file.write(i + "," + cases[i] + "," + targets[i][1] + "\n");
+    		for (int i = 0; i < targets.length; i++) {
+    			
+    			int t = (int) targets[i][0];
+    			
+    			// safety check
+    			if (t >= 0 && t < cases.length) {
+    				file.write(t + "," + cases[t] + "," + targets[i][1] + "\n");
+    			}
     		}
     		
     		file.close();
-    		System.out.println("Output created: " + filename);
+    		System.out.println("Q6b.csv created.");
     	} catch (IOException e) {
     		e.printStackTrace();
     	}
     }
-
 }

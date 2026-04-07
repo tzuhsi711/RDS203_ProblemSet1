@@ -15,7 +15,7 @@ public class Q6e {
 		double alpha = 0.0;
 		double theta = 0.0;
 		
-		double step = 1e-7;
+		double step = 1e-7; // KEEP AS REQUIRED
 		double prevScore = Double.MAX_VALUE;
 		
 		int iter = 0;
@@ -40,24 +40,24 @@ public class Q6e {
 			// ================
 			// 4. Print progress
 			// ================
-			System.out.println("Progress");
-	        System.out.println("Iteration: " + iter);
-            System.out.println("Score: " + score);
-            
-            // parameters
-    		System.out.println("Parameter:");
-    		System.out.println("beta: " + beta);
-    		System.out.println("gamma: " + gamma);
-    		System.out.println("alpha: " + alpha);
-    		System.out.println("theta: " + theta);
-            
-            // gradient
-    		System.out.println("Gradient:");
-    		System.out.println("beta: " + grad[0]);
-    		System.out.println("gamma: " + grad[1]);
-    		System.out.println("alpha: " + grad[2]);
-    		System.out.println("theta: " + grad[3]);
-    		System.out.println("---------------------------");
+//			System.out.println("Progress");
+//	        System.out.println("Iteration: " + iter);
+//            System.out.println("Score: " + score);
+//            
+//            // parameters
+//    		System.out.println("Parameter:");
+//    		System.out.println("beta: " + beta);
+//    		System.out.println("gamma: " + gamma);
+//    		System.out.println("alpha: " + alpha);
+//    		System.out.println("theta: " + theta);
+//            
+//            // gradient
+//    		System.out.println("Gradient:");
+//    		System.out.println("beta: " + grad[0]);
+//    		System.out.println("gamma: " + grad[1]);
+//    		System.out.println("alpha: " + grad[2]);
+//    		System.out.println("theta: " + grad[3]);
+//    		System.out.println("---------------------------");
     		
     		// ================
     		// 5. Update parameters: parameters - (step size)*(gradient) (Lecture 3, pg73)
@@ -70,7 +70,7 @@ public class Q6e {
             // ================
             // 6. Stop when converged (score changes by less than 1e-6)
             // ================
-            if (Math.abs(prevScore - score) < 1e-6) {
+            if (iter > 0 && Math.abs(prevScore - score) < 1e-6) {
             	System.out.println("Converged.");
             	break;
             }
@@ -79,7 +79,7 @@ public class Q6e {
             iter++;
             
             // Prevents infinite loop
-            if (iter > 10000) {
+            if (iter > 1000000) {
                 System.out.println("Max iterations reached.");
                 break;
             }
@@ -101,6 +101,7 @@ public class Q6e {
 	    System.out.println("Final score: " + finalScore);
 	    
 	    Q6b.writeOutput(finalCases, targets, "output_data/Q6e.csv");
+	    System.out.println("Q6e.csv created.");
 	}
 }
 

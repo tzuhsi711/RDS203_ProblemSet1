@@ -184,11 +184,10 @@ head(data6b)
 # Plot
 ggplot(data6b, aes(x = t_day)) +
   geom_point(aes(y = case_obs, colour = "Observed"), size = 2)+
-  geom_line(aes(y = case_pred, colour = "Predicted"), size = 1)+
+  geom_line(aes(y = case_pred, colour = "Predicted, no GD"), size = 1)+
   scale_colour_manual(values = c("Observed" = "lightcoral", 
-                                "Predicted" = "steelblue1"))+
+                                "Predicted, no GD" = "steelblue1"))+
   labs(
-    title = "Initial Predicted Cases vs Observed Cases",
     x = "Time (days)",
     y = "Cases",
     color = ""
@@ -209,11 +208,10 @@ head(data6e)
 # Plot
 ggplot(data6e, aes(x = t_day))+
   geom_point(aes(y = case_obs, colour = "Observed"), size = 2)+
-  geom_line(aes(y = case_pred, colour = "Predicted"), size = 1)+
+  geom_line(aes(y = case_pred, colour = "Predicted, with GD"), size = 1)+
   scale_colour_manual(values = c("Observed" = "lightcoral",
-                                 "Predicted" = "steelblue1"))+
+                                 "Predicted, with GD" = "steelblue1"))+
   labs(
-    title = "Final Predicted Cases vs Observed Cases",
     x = "Time (days)",
     y = "Cases",
     colour = ""
@@ -236,10 +234,12 @@ head(data6_combined)
 
 # Plot
 ggplot(data6_combined, aes(x = t_day))+
-  geom_line(aes(y = case_initial, colour = "Without gradient descent"), size = 1)+
-  geom_line(aes(y = case_final, colour = "With gradient descent"), size = 1)+
-  scale_colour_manual(values = c("Without gradient descent" = "steelblue1",
-                                 "With gradient descent" = "lightcoral"))+
+  geom_point(aes(y = case_obs, colour = "Observed"), size = 3)+
+  geom_line(aes(y = case_initial, colour = "Predicted, without gradient descent"), size = 1)+
+  geom_line(aes(y = case_final, colour = "Predicted, with gradient descent"), size = 1)+
+  scale_colour_manual(values = c("Observed" = "#EE2C2C",
+                                 "Predicted, without gradient descent" = "#79CDCD",
+                                 "Predicted, with gradient descent" = "#EEC900"))+
   labs(
     x = "Time (days)",
     y = "Cases",

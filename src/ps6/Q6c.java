@@ -5,7 +5,9 @@ import java.util.*;
 
 public class Q6c {
 	
-	// Purpose: read the file
+	// =========================
+	// 1. Read CSV 
+	// =========================
 	public static double[][] readCSV(String filename) throws Exception{
 		
 		List<double[]> data = new ArrayList<>();
@@ -19,14 +21,13 @@ public class Q6c {
 			String[] tokens = line.split(",");
 			
 			double t = Double.parseDouble(tokens[0]);
-			double cases = Double.parseDouble(tokens[1]);
+			double cases = Double.parseDouble(tokens[1]);  // ✅ removed scaling
 			
 			data.add(new double[] {t, cases});
 		}
 		
 		file.close();
 		
-		// observed data
 		double [][] targets = new double[data.size()][2];
 		
 		for (int i = 0; i < data.size(); i++) {
@@ -36,28 +37,33 @@ public class Q6c {
 		return targets;
 	}
 	
-	// Purpose: calculate loss score for the current model parameters
-	// Loss score = mean squared error; re-scale by dividing by 1 000 000
-	// cases = predicted cases from runSIR()
+	// =========================
+	// 2. Loss function 
+	// =========================
 	public static double scoreModel(double targets[][], double cases[]) {
 		
-		
-		int n = Math.min(targets.length, cases.length);
 		double sum = 0;
+		int count = 0;
 		
-		for (int i = 0; i < n; i++) {
+		for (int i = 0; i < targets.length; i++) {
 			
-			int t = (int) targets[i][0];
-			double obs = targets[i][1];
-			double pred = cases[t];
+			int t = (int) targets[i][0];  
 			
-			double error = obs - pred;
-			sum += error * error;
+			if (t >= 0 && t < cases.length) {
+				
+				double obs = targets[i][1];
+				double pred = cases[t];
+				
+				double error = obs - pred;
+				sum += error * error;
+				count++;
+			}
 		}
 		
-		double mse = sum / n;
+		double mse = sum / count;
 		
+		// scaling
 		return mse / 1000000.0;
 	}
-	
 }
+

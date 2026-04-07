@@ -1,0 +1,69 @@
+package ps6;
+
+import java.io.*;
+import java.util.*;
+
+public class Q6c {
+	
+	// =========================
+	// 1. Read CSV 
+	// =========================
+	public static double[][] readCSV(String filename) throws Exception{
+		
+		List<double[]> data = new ArrayList<>();
+		BufferedReader file = new BufferedReader(new FileReader(filename));
+		
+		file.readLine(); // skip header
+		
+		String line;
+		while ((line = file.readLine()) != null) {
+			
+			String[] tokens = line.split(",");
+			
+			double t = Double.parseDouble(tokens[0]);
+			double cases = Double.parseDouble(tokens[1]);  // ✅ removed scaling
+			
+			data.add(new double[] {t, cases});
+		}
+		
+		file.close();
+		
+		double [][] targets = new double[data.size()][2];
+		
+		for (int i = 0; i < data.size(); i++) {
+			targets[i] = data.get(i);
+		}
+		
+		return targets;
+	}
+	
+	// =========================
+	// 2. Loss function 
+	// =========================
+	public static double scoreModel(double targets[][], double cases[]) {
+		
+		double sum = 0;
+		int count = 0;
+		
+		for (int i = 0; i < targets.length; i++) {
+			
+			int t = (int) targets[i][0];   // ✅ correct alignment
+			
+			if (t >= 0 && t < cases.length) {
+				
+				double obs = targets[i][1];
+				double pred = cases[t];
+				
+				double error = obs - pred;
+				sum += error * error;
+				count++;
+			}
+		}
+		
+		double mse = sum / count;
+		
+		// keep scaling (assignment requirement)
+		return mse / 1000000.0;
+	}
+}
+

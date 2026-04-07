@@ -32,29 +32,38 @@ public class Q6a {
 	        // Function beta_t: 
 	        // people vary their contact rate with others based on the number of current infectious cases
 	        // i.e., behavioural response to infection prevalence
-	        double beta_t = beta + alpha * Math.max(Math.log(Math.max(I, 1e-10)), 0); // prevents NaN when gradient descent
-
+	        // double beta1 = beta + alpha * Math.max(Math.log(Math.max(I, 1e-10)), 0); // prevents NaN when gradient descent
+	        double beta1 = beta + alpha * Math.max(Math.log(I + 1), 0);
+	        
 	        // RK4 steps
-	        double dS1 = -beta_t * S * I / N;
-	        double dI1 = beta_t * S * I / N - gamma * I;
 
+	        // Step 1
+	        double dS1 = -beta1 * S * I / N;
+	        double dI1 = beta1 * S * I / N - gamma * I;
+
+	        // Step 2
 	        double S2 = S + h * dS1 / 2;
 	        double I2 = I + h * dI1 / 2;
+	        double beta2 = beta + alpha * Math.max(Math.log(Math.max(I2, 1e-10)), 0);
 
-	        double dS2 = -beta_t * S2 * I2 / N;
-	        double dI2 = beta_t * S2 * I2 / N - gamma * I2;
+	        double dS2 = -beta2 * S2 * I2 / N;
+	        double dI2 = beta2 * S2 * I2 / N - gamma * I2;
 
+	        // Step 3
 	        double S3 = S + h * dS2 / 2;
 	        double I3 = I + h * dI2 / 2;
+	        double beta3 = beta + alpha * Math.max(Math.log(Math.max(I3, 1e-10)), 0);
 
-	        double dS3 = -beta_t * S3 * I3 / N;
-	        double dI3 = beta_t * S3 * I3 / N - gamma * I3;
+	        double dS3 = -beta3 * S3 * I3 / N;
+	        double dI3 = beta3 * S3 * I3 / N - gamma * I3;
 
+	        // Step 4
 	        double S4 = S + h * dS3;
 	        double I4 = I + h * dI3;
+	        double beta4 = beta + alpha * Math.max(Math.log(Math.max(I4, 1e-10)), 0);
 
-	        double dS4 = -beta_t * S4 * I4 / N;
-	        double dI4 = beta_t * S4 * I4 / N - gamma * I4;
+	        double dS4 = -beta4 * S4 * I4 / N;
+	        double dI4 = beta4 * S4 * I4 / N - gamma * I4;
 
 	        S += h * (dS1 + 2*dS2 + 2*dS3 + dS4) / 6.0;
 	        I += h * (dI1 + 2*dI2 + 2*dI3 + dI4) / 6.0;
@@ -62,5 +71,4 @@ public class Q6a {
 
 	    return cases;
 	}
-
 }

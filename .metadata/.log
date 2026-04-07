@@ -1,0 +1,13 @@
+!SESSION 2026-04-06 11:38:55.384 -----------------------------------------------
+eclipse.buildId=4.39.0.20260305-0817
+java.version=21.0.10
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -data /Users/cece711/Desktop/Harvard/Year2/RDS203/RDS203_ProblemSet1
+
+!ENTRY ch.qos.logback.classic 1 0 2026-04-06 11:38:57.952
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY ch.qos.logback.classic 1 0 2026-04-06 11:38:59.606
+!MESSAGE Logback config file: /Users/cece711/Desktop/Harvard/Year2/RDS203/RDS203_ProblemSet1/.metadata/.plugins/org.eclipse.m2e.logback/logback.2.7.101.20251017-1242.xml
