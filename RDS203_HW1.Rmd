@@ -525,7 +525,7 @@ ggplot(data9e, aes(x = A, y = B))+
   scale_colour_manual(values = c("Regression line" = "red"))+
   labs(x = "A", y = "B", colour = "")+
   annotate("text",
-           x = quantile(data9e$A, 0.05),,
+           x = quantile(data9e$A, 0.05),
            y = quantile(data9e$B, 0.95),
            label = as.expression(bquote(rho == .(rho_val))),
            hjust = 0,
