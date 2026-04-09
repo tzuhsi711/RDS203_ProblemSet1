@@ -1,6 +1,7 @@
 package ps7;
 
 import java.io.*;
+import util.MersenneTwisterFast;
 import java.util.*;
 
 
@@ -58,7 +59,7 @@ public class Q7a {
 		// ===================
 		// 2. Initial sampling distribution for each parameters
 		// ===================
-		MersenneTwisterFast rng = new MersenneTwisterFast();
+		MersenneTwisterFast rng = new MersenneTwisterFast(207);
 		
         double a = rng.nextGaussian();
         double b = rng.nextGaussian();

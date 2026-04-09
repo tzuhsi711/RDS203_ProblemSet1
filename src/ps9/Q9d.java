@@ -18,7 +18,7 @@ public class Q9d {
 		// =======================
 		// 1. Random generator
 		// =======================
-		Random rand = new Random();
+		Random rand = new Random(207);
 		List<Double> samples = new ArrayList<>(); // store accepted x values
 		
 		double xmin = -10, xmax = 10; // sampling range

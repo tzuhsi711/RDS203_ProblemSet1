@@ -1,9 +1,11 @@
 package ps9;
 
 import java.io.FileWriter;
+
 import java.io.IOException;
 
 import org.apache.commons.math3.distribution.BetaDistribution;
+import org.apache.commons.math3.random.MersenneTwister;
 
 // Purpose: draw 1000 random samples from Beta distribution X ~ Beta(9,3)
 
@@ -14,7 +16,8 @@ public class Q9c {
 		// ======================
 		// 0. Beta distribution
 		// ======================
-		BetaDistribution beta = new BetaDistribution(9, 3);
+		MersenneTwister rand = new MersenneTwister(207);
+		BetaDistribution beta = new BetaDistribution(rand, 9, 3);
 		
 		// ======================
 		// 1. Draw 1000 samples

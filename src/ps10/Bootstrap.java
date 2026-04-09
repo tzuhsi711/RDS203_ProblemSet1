@@ -12,7 +12,7 @@ public class Bootstrap {
 		// ====================
 		// 0. Random generator
 		// ====================
-		Random rand = new Random();
+		Random rand = new Random(207);
 		
 		int n = bp.length;
 		double[] bootMeans = new double[B];

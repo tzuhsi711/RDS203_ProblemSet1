@@ -15,7 +15,7 @@ public class Q6e {
 		double alpha = 0.0;
 		double theta = 0.0;
 		
-		double step = 1e-7; // KEEP AS REQUIRED
+		double step = 1e-7; 
 		double prevScore = Double.MAX_VALUE;
 		
 		int iter = 0;
@@ -57,7 +57,6 @@ public class Q6e {
 //    		System.out.println("gamma: " + grad[1]);
 //    		System.out.println("alpha: " + grad[2]);
 //    		System.out.println("theta: " + grad[3]);
-//    		System.out.println("---------------------------");
     		
     		// ================
     		// 5. Update parameters: parameters - (step size)*(gradient) (Lecture 3, pg73)
@@ -78,7 +77,6 @@ public class Q6e {
             prevScore = score;
             iter++;
             
-            // Prevents infinite loop
             if (iter > 1000000) {
                 System.out.println("Max iterations reached.");
                 break;

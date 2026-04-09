@@ -1,14 +1,14 @@
 package ps8;
 
-import ps7.MersenneTwisterFast;
+import util.MersenneTwisterFast;
 
 public class SimulatedAnnealing {
 	
 	// Return the best Route found
-	public static Route optimise(Route route, double[] x, double[] y) {
+	public static Route optimise(Route route, double[] x, double[] y, MersenneTwisterFast rand) {
 		
 		// Random number generator
-		MersenneTwisterFast rand = new MersenneTwisterFast();
+//		MersenneTwisterFast rand = new MersenneTwisterFast();
 		
 		// ==================
 		// 0. Parameters

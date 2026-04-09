@@ -1,4 +1,4 @@
-package ps7;
+package util;
 
 import java.io.*;
 import java.util.*;

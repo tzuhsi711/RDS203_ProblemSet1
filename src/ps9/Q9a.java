@@ -31,7 +31,7 @@ public class Q9a {
         // =====================
         // 2. Random generator
         // =====================
-        Random rand = new Random();
+        Random rand = new Random(207);
         List<String> samples = new ArrayList<>(); // store each sampled country
         
         // =====================
@@ -72,3 +72,4 @@ public class Q9a {
 	}
 
 }
+

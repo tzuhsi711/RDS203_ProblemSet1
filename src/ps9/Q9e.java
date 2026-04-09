@@ -10,7 +10,7 @@ public class Q9e {
 	
 	public static void main(String[] args) {
 		
-		Random rand = new Random();
+		Random rand = new Random(207);
 		
 		// ===================
 		// 0. Parameters and variables

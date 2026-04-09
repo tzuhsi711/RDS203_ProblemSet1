@@ -33,7 +33,7 @@ public class Q9b_gamma {
         double p = 0.01;
         int numSamples = 1000;
 
-        Random rand = new Random();
+        Random rand = new Random(207);
 
         // ==========================
         // 1. Compute mean and window

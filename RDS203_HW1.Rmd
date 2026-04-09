@@ -1,13 +1,17 @@
 ---
 title: "RDS203_HW1"
-output: html_document
-date: "2026-04-02"
+author: "Tzu-Hsi (Cece) Jen"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc: true
+    toc_depth: 2
+    toc_float: true
+  pdf_document: default
 ---
 
 ```{r}
-install.packages("gt")
-install.packages("ggrepel")
-library(gt)
+# install.packages("ggrepel")
 library(ggrepel)
 library(ggplot2)
 library(dplyr)
@@ -263,15 +267,15 @@ range <- max(data7$y_true) - min(data7$y_true)
 cat("Predicted case range:", range, "\n")
 
 # Compute RMSE and relative error
-mse <- 11127.234330729083
+mse <- 11136.385001392886
 rmse <- sqrt(mse)
 relative_error = rmse/range
 cat("Relative error", relative_error)
 
 # Plot
 ggplot(data7, aes(x = x))+
-  geom_line(aes(y = y_pred, colour = "Predicted"), size = 1)+
-  geom_point(aes(y = y_true, colour = "Observed"), size = 1)+
+  geom_line(aes(y = y_pred, colour = "Predicted"), linewidth = 1)+
+  geom_point(aes(y = y_true, colour = "Observed"), linewidth = 1)+
   labs(
     x = "x",
     y = "y",
