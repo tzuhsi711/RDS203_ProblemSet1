@@ -12,8 +12,9 @@ public class Q6c {
 		
 		List<double[]> data = new ArrayList<>();
 		BufferedReader file = new BufferedReader(new FileReader(filename));
-		
-		file.readLine(); // skip header
+
+		// skip header
+		file.readLine(); 
 		
 		String line;
 		while ((line = file.readLine()) != null) {
@@ -21,7 +22,7 @@ public class Q6c {
 			String[] tokens = line.split(",");
 			
 			double t = Double.parseDouble(tokens[0]);
-			double cases = Double.parseDouble(tokens[1]);  // ✅ removed scaling
+			double cases = Double.parseDouble(tokens[1]); 
 			
 			data.add(new double[] {t, cases});
 		}
